@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=adventure
+comment1.params=
+comment1.target=void\ main()
+comment2.params=
+comment2.target=java.util.Map\ createSynonyms()
+comment3.params=s
+comment3.target=Command\ parseCommand(java.lang.String)
+numComments=4
