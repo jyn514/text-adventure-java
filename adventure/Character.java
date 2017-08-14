@@ -15,10 +15,17 @@ import java.util.ArrayList;
 public class Character {
     private Location location;
     private List<Item> inventory;
+    private String name;
 
     Character() {
 	location = Location.ROOM1;
 	inventory = initialInventory();
+    }
+    
+    Character(String givenName) {
+	location = Location.ROOM1;
+	inventory = initialInventory();
+	name = givenName;
     }
 
     private List<Item> initialInventory() {
