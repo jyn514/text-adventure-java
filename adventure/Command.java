@@ -9,8 +9,9 @@ package adventure;
  * 
  */
 public enum Command {
-    // global actions
+    // global 
     KEYS, INSPECT, DRINK, QUIT, LIGHT, INVENTORY, LOOK, LOCATION, HELP, YES, NO,
-    // room-based actions
+    // location based
     DOOR, CHEST, TAKE, NEXT, PREVIOUS, SNOW, CLIMB
+
 }

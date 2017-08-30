@@ -1,5 +1,3 @@
-package adventure;
-
 /**
  * Main file
  *
@@ -23,6 +21,7 @@ package adventure;
  *  <http://www.gnu.org/licenses/>.
  *  
  */
+package adventure;
 
 import java.util.Scanner;
 
