@@ -48,6 +48,7 @@ public class Adventure {
 	} else {
 	    System.out.println("Skipping all loading sequences.");
 	}
+	Character character = new Character();
 	throw new NotImplementedException();
 
     }

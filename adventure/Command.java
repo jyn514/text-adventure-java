@@ -13,5 +13,4 @@ public enum Command {
     KEYS, INSPECT, DRINK, QUIT, LIGHT, INVENTORY, LOOK, LOCATION, HELP, YES, NO,
     // location based
     DOOR, CHEST, TAKE, NEXT, PREVIOUS, SNOW, CLIMB
-
 }
