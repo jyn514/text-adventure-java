@@ -9,5 +9,5 @@ package adventure;
  * 
  */
 public enum Location {
-    ROOM1
+    ROOM1, CORRIDOR, BASEMENT, ROOM1_REVISITED 
 }
