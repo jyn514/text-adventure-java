@@ -17,71 +17,122 @@
  *  GNU General Public License for more details.
  *  
  *  You should have received a copy of the GNU General Public License
- *  along with this program, in [main directory]/LICENSE.  If not, see
+ *  along with this program, in ./LICENSE.  If not, see
  *  <http://www.gnu.org/licenses/>.
  *  
  */
 package adventure;
 
+import java.util.Arrays;
 import java.util.Scanner;
+
+import readonly.ReadOnly;
 
 public class Adventure {
 
-    private static Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
+    private Character character;
+    private String lastInput;
 
-    public static void main(String[] args) {
-	System.out.println("Adventure  Copyright (C) 2017 Joshua Nelson");
-	System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
-	System.out
-		.println("This is free software, and you are welcome to redistribute it");
-	System.out
-		.println("under certain conditions; see LICENSE for details.\n\n");
+    public Adventure() {
 
-	System.out.println("Welcome to adventure!");
-	/*
-	 * System.out.print("Choose a name for your character: "); Character
-	 * character = new Character(scanner.next());
-	 */
+	readonly.Printing.printCopyright();
+	System.out.println(
+		"Welcome to adventure! Type 'help' at any point for help.");
 	System.out.print("Would you like to read the intro? (y/n): ");
-	if (parseBoolWithErrorHandling()) {
-	    ReadOnly.Intro();
-	} else {
-	    System.out.println("Skipping all loading sequences.");
+
+	if (getBool()) {
+	    readonly.Printing.Intro();
 	}
-	Character character = new Character();
-	throw new NotImplementedException();
+
+	character = new Character();
+	executeCommand(Command.LOOK);
+	while (true) {
+	    System.out.print(">>> ");
+	    try {
+		executeCommand(getCommand());
+	    } catch (readonly.NotImplementedException e) {
+		e.printStackTrace();
+	    }
+	}
 
     }
 
-    private static boolean parseBoolWithErrorHandling() {
-	Command tempCommand;
+    private void printLookResult() {
+	if (character.flashlightIsLit) {
+	    System.out.println(character.location.descriptionWhenLight);
+	} else {
+	    System.out.println(character.location.descriptionWhenDark);
+	}
+    }
+    
+    private void printInventory() {
+	System.out.println("You are carrying:");
+	for (Item i : character.inventory) {
+	    System.out.print("\t");
+	    if (readonly.StringManipulation.shouldBeAn(i.name)) {
+		System.out.print("An ");
+	    } else {
+		System.out.print("A ");
+	    }
+	    System.out.println(i.name);
+	}
+    }
+    
+    private void executeCommand(Command command) {
+	if (command == Command.HELP) {
+	    readonly.Printing.getHelp();
+	} else if (command == Command.LOOK) {
+	    printLookResult();
+	} else if (command == Command.LOOK_AT_ITEM) {
+	    printLookAtItemResult();
+	} else if (command == Command.INVENTORY) {
+	    printInventory();
+	} else {
+	    throw new readonly.NotImplementedException(
+		    "This command is meant to be used, however it has not been programmed yet.");
+	}
+    }
 
-	try {
-	    tempCommand = ReadOnly.parseCommand(scanner.next());
-	} catch (IllegalArgumentException e) {
-	    System.out.print("Please type yes or no.");
-	    return parseBoolWithErrorHandling();
+    private void printLookAtItemResult() {
+	String i = lastInput.split(" ")[-1];
+	for (Item item : character.inventory) {
+	    if (item.name == i) {
+		System.out.println(item.description);
+	    }
+	}
+	for (Item item : character.location.items) {
+	    if (item.name == i) {
+		System.out.println(item.description);
+	    }
+	}
+    }
+    
+    private Command getCommand() {
+	Command c;
+	while (true) {
+	    lastInput = scanner.nextLine();
+	    c = ReadOnly.parseCommand(lastInput);
+	    if (c != null) {
+		return c;
+	    } else {
+		System.out.println(
+			"Command not recognized. Please try again, or type 'help'.");
+	    }
 	}
 
+    }
+
+    private boolean getBool() {
+	Command tempCommand = ReadOnly.parseCommand(scanner.next());
 	if (tempCommand == Command.YES) {
 	    return true;
 	} else if (tempCommand == Command.NO) {
 	    return false;
 	} else {
-	    throw new IllegalStateException();
+	    System.out.print("Please type yes or no.");
+	    return getBool();
 	}
     }
 
-    private static final class NotImplementedException extends RuntimeException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7481020976662341249L;
-
-	NotImplementedException() {
-	    super("This area of the game has not yet been implemented.");
-	}
-	
-    }
 }
