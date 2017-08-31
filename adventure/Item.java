@@ -5,11 +5,13 @@ package adventure;
  * 
  * @author Joshua Nelson
  * @version 0.1 (2017-8-14)
+ * Copyright (C) 2017 Joshua Nelson
+ *
  */
 
 public class Item {
-    private final String name;
-    private final String description;
+    final String name;
+    final String description;
     
     Item(String givenName, String givenDescription) {
 	name = givenName;
@@ -18,6 +20,6 @@ public class Item {
     
     Item(String givenName) {
 	name = givenName;
-	description = null;
+	description = "";
     }
 }

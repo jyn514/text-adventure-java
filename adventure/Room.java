@@ -8,18 +8,37 @@ package adventure;
  * Copyright (C) 2017 Joshua Nelson
  * 
  */
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class Room {
-    
+
     String descriptionWhenLight;
+    Set<Command> actions;
     String descriptionWhenDark;
-    List<Command> actions;
-    
-    Room(String lightDescription, String darkDescription, List<Command> givenActions) {
+    Set<Item> items;
+
+    public Room(String darkDescription, String lightDescription,
+	    Set<Command> givenActions, Set<Item> givenItems) {
+	
 	descriptionWhenLight = lightDescription;
 	descriptionWhenDark = darkDescription;
 	actions = givenActions;
+	
+	if (givenItems != null) {
+	    items = givenItems;
+	} else {
+	    items = new HashSet<Item>();
+	}
+	
     }
-    
+
+    public Room(String description, Set<Command> givenActions, Set<Item> givenItems) {
+	descriptionWhenLight = description;
+	descriptionWhenDark = description;
+	actions = givenActions;
+	items = givenItems;
+    }
+
 }

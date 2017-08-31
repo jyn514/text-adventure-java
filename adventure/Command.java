@@ -1,7 +1,7 @@
 package adventure;
 
 /**
- * Enumeration class Commands - input from player
+ * Enumeration class Commands - inputs player can legally give
  * 
  * @author Joshua Nelson
  * @version 0.1 (2017-8-14) 
@@ -10,7 +10,7 @@ package adventure;
  */
 public enum Command {
     // global 
-    KEYS, INSPECT, DRINK, QUIT, LIGHT, INVENTORY, LOOK, LOCATION, HELP, YES, NO,
+    INSPECT, DRINK, QUIT, LIGHT, INVENTORY, LOOK, LOCATION, HELP, YES, NO, LOOK_AT_ITEM,
     // location based
-    DOOR, CHEST, TAKE, NEXT, PREVIOUS, SNOW, CLIMB
+    KEYS, DOOR, CHEST, TAKE, NEXT, PREVIOUS, SNOW, CLIMB
 }
