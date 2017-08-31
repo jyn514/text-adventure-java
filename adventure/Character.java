@@ -9,27 +9,18 @@
 
 package adventure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Character {
-    private Location location;
-    private List<Item> inventory;
-    private String name;
+import readonly.ReadOnly;
 
-    Character() {
-	location = Location.ROOM1;
-	inventory = initialInventory();
-    }
-
-    Character(String givenName) {
-	location = Location.ROOM1;
-	inventory = initialInventory();
-	name = givenName;
-    }
-
-    private List<Item> initialInventory() {
-	List<Item> inventory = new ArrayList<>();
+class Character {
+    Room location = ReadOnly.rooms.get(Location.ROOM1);
+    Set<Item> inventory = initialInventory();
+    boolean flashlightIsLit = false;
+    
+    private static final Set<Item> initialInventory() {
+	Set<Item> inventory = new HashSet<>();
 
 	inventory.add(new Item("backpack",
 		"Your handy backpack. You brought it when you went hiking."));
