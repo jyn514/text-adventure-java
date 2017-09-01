@@ -10,11 +10,13 @@ import adventure.Command;
 import adventure.Location;
 import adventure.Room;
 
-public final class ReadOnly {
+public final class Mappings {
 
     public static final Map<Location, Room> rooms = createRooms();
 
-    private static final Map<Set<String>, Command> synonyms = createSynonyms();
+    public static final Map<Location, String> roomDescriptions = createDescriptions();
+
+    static final Map<Set<String>, Command> synonyms = createSynonyms();
 
     private static final Map<Location, Room> createRooms() {
 
@@ -25,7 +27,9 @@ public final class ReadOnly {
 			+ "creeping through.",
 		"Your flashlight is brighter than you expected in the dim room. The room is made of wood planks, "
 			+ "and the ceiling is sloped. There is a chest in the middle of the room.",
-		new HashSet(Arrays.asList(Command.CHEST, Command.DOOR, Command.NEXT)), null));
+		new HashSet(Arrays.asList(Command.CHEST, Command.DOOR,
+			Command.NEXT)),
+		null));
 
 	tempRooms.put(Location.CORRIDOR, new Room(
 		"There's a hole in the roof. There's a ton of snow all over the passageway, and even with the light of the "
@@ -33,7 +37,9 @@ public final class ReadOnly {
 		"This whole corridor looks ready to collapse. The room has already caved in, and there's snow  "
 			+ "all over the passageway. Broken planks stick out here and there amongst the wreckage. At the end of "
 			+ "the passage, you can just make out a closed door.",
-		new HashSet(Arrays.asList(Command.DOOR, Command.PREVIOUS, Command.SNOW)), null));
+		new HashSet(Arrays.asList(Command.DOOR, Command.PREVIOUS,
+			Command.SNOW)),
+		null));
 
 	tempRooms.put(Location.BASEMENT, new Room(
 		"The snow is everywhere down here. The corners are dark and musty, although a harsh wind is quickly sweeping "
@@ -41,7 +47,9 @@ public final class ReadOnly {
 		"The snow above is nothing compared to the snow here, which fills the room. "
 			+ "It looks like this was a basement in another time. There's a broom in the corner and some kitchen supplies. "
 			+ "\nThere's a ladder up to the corridor above, if you're careful you might be able to climb it. ",
-		new HashSet(Arrays.asList(Command.CLIMB, Command.NEXT, Command.SNOW)), null));
+		new HashSet(Arrays.asList(Command.CLIMB, Command.NEXT,
+			Command.SNOW)),
+		null));
 
 	tempRooms.put(Location.ROOM1_REVISITED, new Room(
 		"This is the room you woke up in. The door is ajar and you can see the remains of the"
@@ -49,7 +57,9 @@ public final class ReadOnly {
 		"This is the room you woke up in. The door is ajar and you can see the remains of the collapsed "
 			+ "corridor through it. It held up surprisingly well to the snow, which spills in from the "
 			+ "door. There's a non-descript chest in the center of the room.",
-		new HashSet(Arrays.asList(Command.CLIMB, Command.CHEST, Command.PREVIOUS)), null));
+		new HashSet(Arrays.asList(Command.CLIMB, Command.CHEST,
+			Command.PREVIOUS)),
+		null));
 
 	return tempRooms;
 
@@ -58,21 +68,24 @@ public final class ReadOnly {
     private static final Map<Set<String>, Command> createSynonyms() {
 	Map<Set<String>, Command> tempSynonyms = new HashMap<Set<String>, Command>();
 
-	Set<String> yes = new HashSet(Arrays.asList("yes", "ye", "y", "yea", "ok", "yeah",
-		"why not", "sounds good"));
-	Set<String> no = new HashSet(Arrays.asList("no", "n", "no thanks", "nah", "nope"));
-	Set<String> quit = new HashSet(Arrays.asList("close", "quit", "q", "exit",
-		"quit()", "exit()"));
-	Set<String> look = new HashSet(Arrays.asList("look", "look around", "l"));
-	Set<String> help = new HashSet(Arrays.asList("?", "help", "h", "info", "hint"));
-	Set<String> inventory = new HashSet(Arrays.asList("inventory", "get inventory",
-		"carrying", "show items", "i", "items"));
-	Set<String> lookAt = new HashSet(Arrays.asList("inspect", "inspect the",
-		"look at"));
-	Set<String> drink = new HashSet(Arrays.asList("drink", "drink water", "water",
-		"water bottle"));
-	Set<String> keys = new HashSet(Arrays.asList("shortcuts", "hotkeys", "keybindings",
-		"keys", "keyboard", "keymap"));
+	Set<String> yes = new HashSet(Arrays.asList("yes", "ye", "y", "yea",
+		"ok", "yeah", "why not", "sounds good"));
+	Set<String> no = new HashSet(
+		Arrays.asList("no", "n", "no thanks", "nah", "nope"));
+	Set<String> quit = new HashSet(Arrays.asList("close", "quit", "q",
+		"exit", "quit()", "exit()"));
+	Set<String> look = new HashSet(
+		Arrays.asList("look", "look around", "l"));
+	Set<String> help = new HashSet(
+		Arrays.asList("?", "help", "h", "info", "hint"));
+	Set<String> inventory = new HashSet(Arrays.asList("inventory",
+		"get inventory", "carrying", "show items", "i", "items"));
+	Set<String> lookAt = new HashSet(
+		Arrays.asList("inspect", "inspect the", "look at"));
+	Set<String> drink = new HashSet(
+		Arrays.asList("drink", "drink water", "water", "water bottle"));
+	Set<String> keys = new HashSet(Arrays.asList("shortcuts", "hotkeys",
+		"keybindings", "keys", "keyboard", "keymap"));
 	Set<String> light = new HashSet(Arrays.asList( // please keep
 		// this list in
 		// order
@@ -81,6 +94,8 @@ public final class ReadOnly {
 		"turn on light", "turn light on", "dim", "dim flashlight",
 		"turn off flashlight", "turn flashlight off", "flashlight off",
 		"turn off light", "turn light off"));
+	Set<String> location = new HashSet(Arrays.asList("location",
+		"where am i", "where", "room", "map", "loc"));
 
 	tempSynonyms.put(yes, Command.YES);
 	tempSynonyms.put(no, Command.NO);
@@ -92,21 +107,22 @@ public final class ReadOnly {
 	tempSynonyms.put(drink, Command.DRINK);
 	tempSynonyms.put(keys, Command.KEYS);
 	tempSynonyms.put(lookAt, Command.LOOK_AT_ITEM);
+	tempSynonyms.put(location, Command.LOCATION);
 
 	// INSPECT, KEYS, DRINK, QUIT, LIGHT, INVENTORY, LOOK, LOCATION,
 	// HELP, YES, NO, LOOKATITEM
 	return tempSynonyms;
     }
 
-    public static final Command parseCommand(String s) {
+    private static final Map<Location, String> createDescriptions() {
+	Map<Location, String> descriptions = new HashMap<>();
 
-	s = s.toLowerCase();
-
-	for (Set<String> array : synonyms.keySet()) {
-	    if (array.contains(s)) {
-		return synonyms.get(array);
-	    }
-	}
-	return null;
+	descriptions.put(Location.ROOM1,
+		"the small room where you woke up. Ahead you can see a closed door.");
+	descriptions.put(Location.CORRIDOR,
+		"a long and narrow corridor covered in snow. Behind you is the room where you woke up. Ahead is an open door.");
+	descriptions.put(Location.BASEMENT,
+		"a small basement. Above, you can see the corridor you fell from. Ahead is a rickety ladder.");
+	return descriptions;
     }
 }

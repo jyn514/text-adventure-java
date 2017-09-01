@@ -11,7 +11,7 @@ package readonly;
 
 public final class NotImplementedException extends RuntimeException {
     private static final long serialVersionUID = 7481020976662341249L;
-    private static final String notImplemented = "This area of the game has not yet been implemented.";
+    private static final String notImplemented = "This area of the game has not yet been implemented. ";
 
     public NotImplementedException() {
 	super(notImplemented);

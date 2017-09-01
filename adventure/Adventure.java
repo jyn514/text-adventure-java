@@ -26,13 +26,11 @@ package adventure;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import readonly.ReadOnly;
-
 public class Adventure {
 
     private Scanner scanner = new Scanner(System.in);
     private Character character;
-    private String lastInput;
+    private String lastInput = "";
 
     public Adventure() {
 
@@ -60,12 +58,12 @@ public class Adventure {
 
     private void printLookResult() {
 	if (character.flashlightIsLit) {
-	    System.out.println(character.location.descriptionWhenLight);
+	    System.out.println(character.room.descriptionWhenLight);
 	} else {
-	    System.out.println(character.location.descriptionWhenDark);
+	    System.out.println(character.room.descriptionWhenDark);
 	}
     }
-    
+
     private void printInventory() {
 	System.out.println("You are carrying:");
 	for (Item i : character.inventory) {
@@ -78,53 +76,72 @@ public class Adventure {
 	    System.out.println(i.name);
 	}
     }
-    
+
     private void executeCommand(Command command) {
 	if (command == Command.HELP) {
 	    readonly.Printing.getHelp();
 	} else if (command == Command.LOOK) {
 	    printLookResult();
-	} else if (command == Command.LOOK_AT_ITEM) {
+	} else if (command == Command.LOOK_AT_ITEM) { // TODO fails (item not in valid commands)
 	    printLookAtItemResult();
 	} else if (command == Command.INVENTORY) {
 	    printInventory();
+	} else if (command == Command.LOCATION) {
+	    printLocation();
 	} else {
 	    throw new readonly.NotImplementedException(
 		    "This command is meant to be used, however it has not been programmed yet.");
 	}
     }
+    
+    private void printLocation() {
+	String loc = readonly.Mappings.roomDescriptions.get(character.location);
+	System.out.println(String.format("You are standing in %s", loc));
+    }
 
     private void printLookAtItemResult() {
-	String i = lastInput.split(" ")[-1];
+	if (!lastInput.contains(" ")) {
+	    System.out.println("What do you want to look at?");
+	    return;
+	}
+	String[] words = lastInput.split(" ");
+	String chosenItem = words[words.length - 1];
+	boolean looked = false;
+	
 	for (Item item : character.inventory) {
-	    if (item.name == i) {
+	    if (item.name == chosenItem) {
 		System.out.println(item.description);
+		looked = true;
 	    }
 	}
-	for (Item item : character.location.items) {
-	    if (item.name == i) {
+	for (Item item : character.room.items) {
+	    if (item.name == chosenItem) {
 		System.out.println(item.description);
+		looked = true;
 	    }
+	}
+	
+	if (looked == false) {
+	    System.out.println("What do you want to look at?");
 	}
     }
-    
+
     private Command getCommand() {
-	Command c;
-	while (true) {
+	Command c = null;
+	lastInput = scanner.nextLine(); // see https://stackoverflow.com/questions/13102045/
+	c = readonly.Functions.parseCommand(lastInput);
+
+	while (c == null) {
+	    System.out.print("Command not recognized. Please try again, or type 'help'.\n>>>");
 	    lastInput = scanner.nextLine();
-	    c = ReadOnly.parseCommand(lastInput);
-	    if (c != null) {
-		return c;
-	    } else {
-		System.out.println(
-			"Command not recognized. Please try again, or type 'help'.");
-	    }
+	    c = readonly.Functions.parseCommand(lastInput);
 	}
+	return c;
 
     }
 
     private boolean getBool() {
-	Command tempCommand = ReadOnly.parseCommand(scanner.next());
+	Command tempCommand = readonly.Functions.parseCommand(scanner.nextLine());
 	if (tempCommand == Command.YES) {
 	    return true;
 	} else if (tempCommand == Command.NO) {

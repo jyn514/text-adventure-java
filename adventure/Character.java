@@ -12,10 +12,11 @@ package adventure;
 import java.util.HashSet;
 import java.util.Set;
 
-import readonly.ReadOnly;
+import readonly.Mappings;
 
 class Character {
-    Room location = ReadOnly.rooms.get(Location.ROOM1);
+    Location location = Location.ROOM1;
+    Room room = Mappings.rooms.get(location);
     Set<Item> inventory = initialInventory();
     boolean flashlightIsLit = false;
     
@@ -32,4 +33,5 @@ class Character {
 
 	return inventory;
     }
+
 }
