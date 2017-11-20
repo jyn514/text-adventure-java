@@ -3,7 +3,7 @@
  * Entry point for Adventure. Meant only so Adventure.java can be initialized properly.
  * 
  * @author Joshua Nelson
- * @version 0.1 (2017-08-14)
+ * @version 0.1 (2017-8-14)
  * @email jyn514@gmail.com
  * Copyright (C) 2017  Joshua Nelson
  *
