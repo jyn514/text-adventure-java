@@ -10,3 +10,18 @@ consult https://github.com/jyn514/text-adventure-java/issues or shoot me an emai
 USER INSTRUCTIONS: If you're using the pre-compiled jarfile, run `java -jar /path/to/adventure.jar`.
 Otherwise, compile with `javac /path/to/adventure/Main.java` and run `Main.class`.
 Enjoy!
+
+ISSUES:
+    DRINK not implemented
+    Items not implemented for LOOK:
+        Door
+        Room
+        
+    Location based-commands (aka literally the entire game) not implemented:
+      CHEST
+      DOOR
+      NEXT
+      SNOW
+      PREVIOUS
+      CLIMB
+      TAKE

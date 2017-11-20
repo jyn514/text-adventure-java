@@ -1,22 +1,22 @@
 package adventure;
 
 /**
- * class Location - basis for rooms in the game
+ * class Room - basis for rooms in the game
+ * All rooms are initialized from readonly.Mappings
  * 
  * @author Joshua Nelson
- * @version 0.1 (2017-8-14) 
+ * @version 0.1 (2017-08-14) 
  * Copyright (C) 2017 Joshua Nelson
  * 
  */
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Optional;
 
 public class Room {
 
-    String descriptionWhenLight;
-    Set<Command> actions;
-    String descriptionWhenDark;
+    public final String descriptionWhenLight;
+    public final Set<Command> actions;
+    public final String descriptionWhenDark;
     Set<Item> items;
 
     public Room(String darkDescription, String lightDescription,

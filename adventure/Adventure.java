@@ -1,8 +1,9 @@
 /**
  * Main file
+ * Prints intro, then goes into read -> parse -> exec loop
  *
  * @author Joshua Nelson
- * @version 0.1 (2017-8-14)
+ * @version 0.2 (2017-09-21)
  * @email jyn514@gmail.com
  * Copyright (C) 2017  Joshua Nelson
  *
@@ -23,7 +24,9 @@
  */
 package adventure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Adventure {
@@ -44,16 +47,19 @@ public class Adventure {
 	}
 
 	character = new Character();
-	executeCommand(Command.LOOK);
+	executeCommand(Arrays.asList(Command.LOOK));
 	while (true) {
-	    System.out.print(">>> ");
 	    try {
-		executeCommand(getCommand());
+		List<Command> c = getCommand();
+		if (c.contains(Command.QUIT)) {
+		    System.out.println("Quitting.");
+		    return;
+		}
+		executeCommand(c);
 	    } catch (readonly.NotImplementedException e) {
-		e.printStackTrace();
+		System.out.println(e.getMessage()); // is there a less verbose way to do this?
 	    }
 	}
-
     }
 
     private void printLookResult() {
@@ -64,42 +70,58 @@ public class Adventure {
 	}
     }
 
-    private void printInventory() {
-	System.out.println("You are carrying:");
-	for (Item i : character.inventory) {
-	    System.out.print("\t");
-	    if (readonly.StringManipulation.shouldBeAn(i.name)) {
-		System.out.print("An ");
-	    } else {
-		System.out.print("A ");
-	    }
-	    System.out.println(i.name);
-	}
-    }
-
-    private void executeCommand(Command command) {
-	if (command == Command.HELP) {
+    private void executeCommand(List<Command> command) {
+	switch (command.get(0)) { // out of date
+	case HELP: // TODO: item/room specific help
 	    readonly.Printing.getHelp();
-	} else if (command == Command.LOOK) {
+	    break;
+	case LOOK:
+	    if (command.size() == 1) {
+		printLookResult();
+	    } else {
+		printInspectResult();
+	    }
+	    break;
+	case INSPECT:
+	    printInspectResult();
+	    break;
+	case INVENTORY:
+	    System.out.println("You are carrying:");
+	    for (Item i : character.inventory) {
+		System.out.print("\t");
+		if (readonly.StringManipulation.shouldBeAn(i.name)) {
+		    System.out.print("An ");
+		} else {
+		    System.out.print("A ");
+		}
+		System.out.println(i.name);
+	    }
+	    break;
+	case LOCATION:
+	    String loc = readonly.Mappings.roomDescriptions
+		    .get(character.location);
+	    System.out.println(String.format("You are standing in %s", loc));
+	    break;
+	case LIGHT:
+	    character.flashlightIsLit = !character.flashlightIsLit;
 	    printLookResult();
-	} else if (command == Command.LOOK_AT_ITEM) { // TODO fails (item not in valid commands)
-	    printLookAtItemResult();
-	} else if (command == Command.INVENTORY) {
-	    printInventory();
-	} else if (command == Command.LOCATION) {
-	    printLocation();
-	} else {
+	    break;
+	case KEYS:
+	    System.out.println(readonly.Functions.getOneLetterKeys());
+	    break;
+	case QUIT:
+	    break; // handled in <init> albeit poorly
+	case YES:
+	    break;
+	case NO:
+	    break;
+	default:
 	    throw new readonly.NotImplementedException(
-		    "This command is meant to be used, however it has not been programmed yet.");
+		    "This command is meant to be used, however it has not been programmed yet.\n");
 	}
     }
-    
-    private void printLocation() {
-	String loc = readonly.Mappings.roomDescriptions.get(character.location);
-	System.out.println(String.format("You are standing in %s", loc));
-    }
 
-    private void printLookAtItemResult() {
+    private void printInspectResult() {
 	if (!lastInput.contains(" ")) {
 	    System.out.println("What do you want to look at?");
 	    return;
@@ -107,41 +129,52 @@ public class Adventure {
 	String[] words = lastInput.split(" ");
 	String chosenItem = words[words.length - 1];
 	boolean looked = false;
-	
+
 	for (Item item : character.inventory) {
-	    if (item.name == chosenItem) {
+	    if (item.name.equals(chosenItem)) {
 		System.out.println(item.description);
 		looked = true;
 	    }
 	}
 	for (Item item : character.room.items) {
-	    if (item.name == chosenItem) {
+	    if (item.name.equals(chosenItem)) {
 		System.out.println(item.description);
 		looked = true;
 	    }
 	}
-	
+
 	if (looked == false) {
-	    System.out.println("What do you want to look at?");
+	    System.out.println("I don't recognize that item.");
 	}
     }
 
-    private Command getCommand() {
-	Command c = null;
-	lastInput = scanner.nextLine(); // see https://stackoverflow.com/questions/13102045/
-	c = readonly.Functions.parseCommand(lastInput);
+    private List<Command> getCommand() { // function allows recursion
+	List<Command> currentCommands = new ArrayList<Command>();
 
-	while (c == null) {
-	    System.out.print("Command not recognized. Please try again, or type 'help'.\n>>>");
-	    lastInput = scanner.nextLine();
-	    c = readonly.Functions.parseCommand(lastInput);
-	}
-	return c;
+	do {
+	    System.out.print(">>> ");
+	    lastInput = scanner.nextLine().trim().toLowerCase();
+	    for (String s : lastInput.split(" ")) {
+		Command c = readonly.Functions.parseCommand(s, character.room);
+		if (c != null) {
+		    currentCommands.add(c);
+		}
+	    }
+
+	    if (!lastInput.equals("") && (currentCommands.size() == 0)) {
+		System.out.println(
+			"Command not recognized. Please try something else, or type 'help'.");
+		return getCommand(); // recursion!
+	    }
+
+	} while (currentCommands.size() == 0);
+	return currentCommands;
 
     }
 
     private boolean getBool() {
-	Command tempCommand = readonly.Functions.parseCommand(scanner.nextLine());
+	Command tempCommand = readonly.Functions
+		.parseCommand(scanner.nextLine().trim().toLowerCase());
 	if (tempCommand == Command.YES) {
 	    return true;
 	} else if (tempCommand == Command.NO) {

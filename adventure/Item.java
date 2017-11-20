@@ -13,12 +13,12 @@ public class Item {
     final String name;
     final String description;
     
-    Item(String givenName, String givenDescription) {
+    public Item(String givenName, String givenDescription) {
 	name = givenName;
 	description = givenDescription;
     }
     
-    Item(String givenName) {
+    public Item(String givenName) {
 	name = givenName;
 	description = "";
     }
