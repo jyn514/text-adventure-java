@@ -4,7 +4,7 @@ package adventure;
  * Enumeration class Locations - all rooms in the game
  * 
  * @author Joshua Nelson
- * @version 0.1 (2017-8-14) 
+ * @version 0.1 (2017-08-14) 
  * Copyright (C) 2017 Joshua Nelson
  * 
  */
